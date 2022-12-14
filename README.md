@@ -1,14 +1,54 @@
-# Vue 3 + TypeScript + Vite
+## 项目能力集成
+`Vue@3`
+
+`Vite@4`
+
+`TypeScript`
+
+`Pinia`
+
+`ESLint`
+
+`StyleLint`
 
 ## 代码提交规范
-type	含义
-feat	新功能
-fix	修复
-docs	文档变更
-style	代码格式（不影响代码运行）
-refactor	重构（不增加新功能，也不是修改 bug）
-perf	性能优化
-test	添加测试
-chore	修改构建过程或辅助工具
-revert	回退
-build	打包
+含义 `type`
+
+新功能 `feat`	
+
+修复 `fix`	
+
+文档变更`docs`	
+
+代码格式（不影响代码运行） `style`	
+
+重构（不增加新功能，也不是修改 bug） `refactor`	
+
+性能优化 `perf`	
+
+添加测试 `test`	
+
+修改构建过程或辅助工具 `chore`	
+
+回退 `revert`	
+
+打包 `build`	
+
+## Scripts 命令描述]
+服务 `npm run dev`
+
+构建 `npm run build`
+
+预览 `npm run preview`
+
+自动化格式化 `npm run prettier`
+
+检查行为代码 `npm run lint`
+
+修复行为代码 `npm run lint:fix`
+
+检查样式代码 `npm run style-lint`
+
+修复样式代码 `npm run style-lint:fix`
+
+提交不校验 `git commit --no-verify -m “xxx”`

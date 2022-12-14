@@ -12,7 +12,7 @@
     "lint:fix": "eslint src --fix --ext .ts,.tsx,.vue,.js,.jsx",
     "style-lint": "stylelint src/**/*.{css,sass,scss,less,vue}",
     "style-lint:fix": "stylelint src/**/*.{css,sass,scss,less,vue} --fix",
-    "prepare": "husky install"
+    "prepare": ""
   },
   "dependencies": {
     "vue": "^3.2.45"
@@ -44,9 +44,7 @@
   },
   "lint-staged": {
     "*.{ts,tsx,vue,js,jsx}": [
-      "npm run lint",
-      "prettier --write",
-      "git add"
+      "npm run lint"
     ],
     "*.{css,sass,scss,less,vue}": [
       "npm run style-lint"
