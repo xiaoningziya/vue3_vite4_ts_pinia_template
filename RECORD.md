@@ -843,3 +843,22 @@ import { NButton } from "naive-ui"
     <!-- 容器 -->
 </n-config-provider>
 ```
+
+38. vite.config.ts 配置代理、路径、打包去除代码、zip压缩等
+
+39. 常用插件
+> 可以查看官方文档：vitejs.cn/plugins/
+@vitejs/plugin-vue 提供 Vue 3 单文件组件支持
+@vitejs/plugin-vue-jsx 提供 Vue 3 JSX 支持（通过 专用的 Babel 转换插件）
+@vitejs/plugin-legacy 为打包后的文件提供传统浏览器兼容性支持
+unplugin-vue-components 组件的按需自动导入
+vite-plugin-compression 使用 gzip 或者 brotli 来压缩资源
+
+40. 非常推荐使用的 hooks 库
+> 因为vue3.x和react hooks真的很像，所以就称为 hooks
+VueUse：https://vueuse.org/
+看到这个库的第一眼，让我立马想到了 react 的 ahooks
+VueUse 是一个基于 Composition API 的实用函数集合。通俗的来说，这就是一个工具函数包，它可以帮助你快速实现一些常见的功能，免得你自己去写，解决重复的工作内容。以及进行了基于 Composition API 的封装。让你在 vue3 中更加得心应手。
+
+41. pinia 状态管理库
+#待添加说明
