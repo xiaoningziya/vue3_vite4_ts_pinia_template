@@ -533,3 +533,5 @@ cnpm install --save-dev postcss-html stylelint-config-standard-vue
 > 配置stylelintrc.cjs
 "extends": "stylelint-config-standard-vue"
 "customSyntax": "postcss-html",
+
+31. `githooks对于lint的配置后面还有修改，以最终结果为准`
