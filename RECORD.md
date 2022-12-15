@@ -510,4 +510,26 @@ module.exports = {
   }
 }
 
-29. 
+29. 配置 husky
+### Github
+https://github.com/typicode/husky
+### 下载
+cnpm i -D husky
+### 添加两个文件
+npx husky add .husky/pre-commit
+npx husky add .husky/commit-msg
+### .husky/pre-commit 添加内容
+npm run lint
+npm run style-lint
+### .husky/commit-msg 添加内容
+node scripts/verify-commit-msg.js
+
+30. stylelint 报错
+### 报错内容
+When linting something other than CSS, you should install an appropriate syntax, e.g. "postcss-html", and use the "customSyntax" option
+### 解决方案
+> 下载
+cnpm install --save-dev postcss-html stylelint-config-standard-vue
+> 配置stylelintrc.cjs
+"extends": "stylelint-config-standard-vue"
+"customSyntax": "postcss-html",

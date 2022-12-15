@@ -12,25 +12,33 @@
     "lint:fix": "eslint src --fix --ext .ts,.tsx,.vue,.js,.jsx",
     "style-lint": "stylelint src/**/*.{css,sass,scss,less,vue}",
     "style-lint:fix": "stylelint src/**/*.{css,sass,scss,less,vue} --fix",
+    "commit": "git-cz",
+    "postinstall": "husky install",
     "prepare": "husky install"
   },
   "dependencies": {
     "vue": "^3.2.45"
   },
   "devDependencies": {
+    "@commitlint/cli": "^17.3.0",
+    "@commitlint/config-conventional": "^17.3.0",
     "@typescript-eslint/eslint-plugin": "^5.46.1",
     "@typescript-eslint/parser": "^5.46.1",
     "@vitejs/plugin-vue": "^4.0.0",
+    "commitizen": "^4.2.6",
+    "cz-conventional-changelog": "^3.3.0",
     "eslint": "^8.29.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-vue": "^9.8.0",
     "husky": "^8.0.2",
     "lint-staged": "^13.1.0",
+    "postcss-html": "^1.5.0",
     "prettier": "^2.8.1",
     "stylelint": "^14.16.0",
     "stylelint-config-css-modules": "^4.1.0",
     "stylelint-config-standard": "^29.0.0",
+    "stylelint-config-standard-vue": "^1.0.0",
     "stylelint-less": "^1.0.6",
     "stylelint-order": "^5.0.0",
     "stylelint-scss": "^4.3.0",
@@ -39,12 +47,6 @@
     "vue-tsc": "^1.0.11",
     "yorkie": "^2.0.0"
   },
-  "husky": {
-    "hooks": {  
-      "pre-commit": "lint-staged",
-      "commit-msg": "node scripts/verify-commit-msg.js"
-    }
-  },
   "lint-staged": {
     "*.{ts,tsx,vue,js,jsx}": [
       "npm run lint"
@@ -52,6 +54,11 @@
     "*.{css,sass,scss,less,vue}": [
       "npm run style-lint"
     ]
+  },
+  "config": {
+    "commitizen": {
+        "path": "./node_modules/cz-conventional-changelog"
+      }
   },
   "prettier": {
     "semi": false

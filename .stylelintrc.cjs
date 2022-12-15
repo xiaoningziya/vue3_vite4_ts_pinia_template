@@ -1,8 +1,10 @@
 module.exports = {
   processors: [],
   plugins: ['stylelint-order'],
+  customSyntax: "postcss-html",
   extends: [
     "stylelint-config-standard",
+    "stylelint-config-standard-vue",
     "stylelint-config-css-modules"
   ],
   rules: {
