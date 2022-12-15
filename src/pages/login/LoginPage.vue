@@ -10,13 +10,11 @@ export default defineComponent({
 </script>
 
 <template>
-  <h1 class="msg">{{ msg }}</h1>
-  <h1 class="count">{{ count }}</h1>
+  <h1>login.vue</h1>
 </template>
 
 <style lang="scss" scoped>
-.msg {
-  color: #888;
-  background: $test-color;
+h1 {
+  color: $test-color;
 }
 </style>

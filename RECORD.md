@@ -535,3 +535,267 @@ cnpm install --save-dev postcss-html stylelint-config-standard-vue
 "customSyntax": "postcss-html",
 
 31. `githooks对于lint的配置后面还有修改，以最终结果为准`
+
+32. 配置文件引用别名 alias
+> vite.config.ts
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+import path from 'path'
+
+// https://vitejs.dev/config/
+export default defineConfig({
+  plugins: [vue()],
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, 'src'),
+    },
+  },
+})
+> tsconfig.json
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "strict": true,
+    "jsx": "preserve",
+    "sourceMap": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "lib": ["esnext", "dom"],
+    "baseUrl": ".",
+    "paths": {
+      "@/*":["src/*"]
+    }
+  },
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"]
+}
+
+33. 配置 css 预处理器 scss
+配置全局 scss 样式文件
+`cnpm i -D dart-sass`
+`cnpm i -D sass`
+在 src/assets 下新增 style 文件夹，用于存放全局样式文件
+新建 main.scss, 设置一个用于测试的颜色变量 :
+```
+$test-color: red;
+```
+如何将这个全局样式文件全局注入到项目中呢？配置 Vite 即可：
+css:{
+    preprocessorOptions:{
+      scss:{
+        additionalData:'@import "@/assets/style/mian.scss";'
+      }
+    }
+},
+组件中使用:
+不需要任何引入可以直接使用全局scss定义的变量
+```
+.test{
+  color: $test-color;
+}
+``` 
+
+34. 路由配置
+> 下载依赖
+cnpm i vue-router@4 -S
+> 在 src 文件下新增 router 文件夹 => router.ts 文件,内容如下
+```
+import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
+
+const routes: RouteRecordRaw[] = [
+  {
+    path: '/',
+    name: 'Login',
+    component: () => import('@/pages/login/Login.vue'), // 注意这里要带上 文件后缀.vue
+  },
+]
+
+const router = createRouter({
+  history: createWebHistory(),
+  routes,
+})
+
+export default router
+```
+> 修改入口文件 mian.ts
+```
+import { createApp } from 'vue'
+import App from './App.vue'
+import router from './router/index'
+
+const app = createApp(App)
+
+app.use(router)
+
+app.mount('#app')
+```
+> vue-router4.x 支持 typescript，配置路由的类型是 RouteRecordRaw，这里 meta 可以让我们有更多的发挥空间，这里提供一些参考：
+```
+title:string; 页面标题，通常必选。
+icon?:string; 图标，一般配合菜单使用。
+auth?:boolean; 是否需要登录权限。
+ignoreAuth?:boolean; 是否忽略权限。
+roles?:RoleEnum[]; 可以访问的角色
+keepAlive?:boolean; 是否开启页面缓存
+hideMenu?:boolean; 有些路由我们并不想在菜单中显示，比如某些编辑页面。
+order?:number; 菜单排序。
+frameUrl?:string; 嵌套外链。
+```
+
+35. 统一请求封装
+> 下载依赖
+```
+# 安装 axios
+yarn add axios
+# 安装 nprogress 用于请求 loading
+# 也可以根据项目需求自定义其它 loading
+yarn add nprogress
+# 类型声明，或者添加一个包含 `declare module 'nprogress'
+yarn add @types/nprogress --dev
+```
+> 新增 service 文件夹，service 下新增 http.ts 文件以及 api 文件夹
+> http.ts : 用于axios封装
+```
+//http.ts
+import axios, { AxiosRequestConfig } from 'axios'
+import NProgress from 'nprogress'
+
+// 设置请求头和请求路径
+axios.defaults.baseURL = '/api'
+axios.defaults.timeout = 10000
+axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8'
+axios.interceptors.request.use(
+  (config): AxiosRequestConfig<any> => {
+    const token = window.sessionStorage.getItem('token')
+    if (token) {
+      //@ts-ignore
+      config.headers.token = token
+    }
+    return config
+  },
+  (error) => {
+    return error
+  }
+)
+// 响应拦截
+axios.interceptors.response.use((res) => {
+  if (res.data.code === 111) {
+    sessionStorage.setItem('token', '')
+    // token过期操作
+  }
+  return res
+})
+
+interface ResType<T> {
+  code: number
+  data?: T
+  msg: string
+  err?: string
+}
+interface Http {
+  get<T>(url: string, params?: unknown): Promise<ResType<T>>
+  post<T>(url: string, params?: unknown): Promise<ResType<T>>
+  upload<T>(url: string, params: unknown): Promise<ResType<T>>
+  download(url: string): void
+}
+
+const http: Http = {
+  get(url, params) {
+    return new Promise((resolve, reject) => {
+      NProgress.start()
+      axios
+        .get(url, { params })
+        .then((res) => {
+          NProgress.done()
+          resolve(res.data)
+        })
+        .catch((err) => {
+          NProgress.done()
+          reject(err.data)
+        })
+    })
+  },
+  post(url, params) {
+    return new Promise((resolve, reject) => {
+      NProgress.start()
+      axios
+        .post(url, JSON.stringify(params))
+        .then((res) => {
+          NProgress.done()
+          resolve(res.data)
+        })
+        .catch((err) => {
+          NProgress.done()
+          reject(err.data)
+        })
+    })
+  },
+  upload(url, file) {
+    return new Promise((resolve, reject) => {
+      NProgress.start()
+      axios
+        .post(url, file, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        })
+        .then((res) => {
+          NProgress.done()
+          resolve(res.data)
+        })
+        .catch((err) => {
+          NProgress.done()
+          reject(err.data)
+        })
+    })
+  },
+  download(url) {
+    const iframe = document.createElement('iframe')
+    iframe.style.display = 'none'
+    iframe.src = url
+    iframe.onload = function () {
+      document.body.removeChild(iframe)
+    }
+    document.body.appendChild(iframe)
+  },
+}
+export default http
+```
+> api : 项目中接口做统一管理，按照模块来划分
+> 在 api 文件下新增 login 文件夹,用于存放登录模块的请求接口,login 文件夹下分别新增 login.ts types.ts
+> login.ts
+```
+import http from '@/service/http'
+import * as T from './types'
+
+const loginApi: T.ILoginApi = {
+    login(params){
+        return http.post('/login', params)
+    }
+
+}
+export default loginApi
+```
+> types.ts
+```
+export interface ILoginParams {
+    userName: string
+    passWord: string | number
+}
+export interface ILoginApi {
+    login: (params: ILoginParams)=> Promise<any>
+}
+```
+> 除了自己手动封装 axios ,这里还推荐一个 vue3 的请求库: VueRequest,非常好用,下面来看看 VueRequest有哪些比较好用的功能吧!!!
+```
+🚀 所有数据都具有响应式
+🔄 轮询请求
+🤖 自动处理错误重试
+🗄 内置请求缓存
+💧 节流请求与防抖请求
+🎯 聚焦页面时自动重新请求
+⚙️ 强大的分页扩展以及加载更多扩展
+📠 完全使用 Typescript 编写，具有强大的类型提示
+⚡️ 兼容 Vite
+🍃 轻量化
+📦 开箱即用
+```
