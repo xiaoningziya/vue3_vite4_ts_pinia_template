@@ -822,3 +822,24 @@ console.log(import.meta.env.VITE_APP_WEB_URL)
 "build:dev": "vite build --mode development",
 "build:pro": "vite build --mode production",
 ```
+
+37. 视图组件安装 Naive UI
+> 安装依赖
+```
+# 安装 组件库
+cnpm i -S naive-ui
+# 安装 字体
+cnpm i -S vfonts
+```
+> 如何使用
+```
+import { NButton } from "naive-ui"
+<n-button>naive-ui</n-button>
+```
+> 全局配置 Config Provider
+`全局化配置设置内部组件的主题、语言和组件卸载于其他位置的 DOM 的类名`
+```
+<n-config-provider :locale="zhCN" :theme="theme">
+    <!-- 容器 -->
+</n-config-provider>
+```

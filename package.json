@@ -18,7 +18,9 @@
   },
   "dependencies": {
     "axios": "^1.2.1",
+    "naive-ui": "^2.34.2",
     "nprogress": "^0.2.0",
+    "vfonts": "^0.0.3",
     "vue": "^3.2.45",
     "vue-router": "^4.1.6"
   },
