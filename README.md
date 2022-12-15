@@ -1,15 +1,22 @@
 ## 项目能力集成
-`Vue@3`
+`vue@3.2.45`
 
-`Vite@4`
+`vite@4.0.0`
 
-`TypeScript`
+`vue-router@4.1.6`
 
-`Pinia`
+`naive-ui@2.34.2`
 
-`ESLint`
+`typescript@4.9.3`
 
-`StyleLint`
+`Pinia@2.0.28`
+
+`axios@1.2.1`
+
+`esLint`
+
+`stylelint`
+
 
 ## 代码提交规范
 含义 `type`

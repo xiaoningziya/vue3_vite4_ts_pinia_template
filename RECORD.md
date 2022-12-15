@@ -1,3 +1,5 @@
+# `本文记录了该项目的配置过程 @xiaoningziya`
+
 ## 1. 远程 Github 的仓库，生成一份本地的秘钥
   - `cd ~/.ssh`
   - `cat ./id_rsa.pub`
