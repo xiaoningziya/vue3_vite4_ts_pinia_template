@@ -1,4 +1,4 @@
-:root {
+/* :root {
   font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
   font-size: 13px;
   -webkit-font-smoothing: antialiased;
@@ -11,46 +11,12 @@
   background-color: #242424;
   color-scheme: light dark;
   font-synthesis: none;
-}
+} */
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-
-a:hover {
-  color: #535bf2;
-}
-
-body {
-  display: flex;
-  min-width: 320px;
-  min-height: 100vh;
-  margin: 0;
-  place-items: center;
-}
-
-/* stylelint-disable-next-line selector-max-id */
-#app {
-  max-width: 1280px;
-  padding: 2rem;
+html, body, #app {
+  width: 100%;
+  height: 100%;
   font-size: 13px;
-  margin: 0 auto;
-  text-align: center;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #fff;
-  }
-
-  a:hover {
-    color: #747bff;
-  }
-
-  button {
-    background-color: #f9f9f9;
-  }
+  color: #213547;
+  background: #fff;
 }

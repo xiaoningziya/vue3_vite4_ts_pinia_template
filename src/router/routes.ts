@@ -6,14 +6,34 @@ const routes: RouteRecordRaw[] = [
     redirect: "/index",
   },
   {
-    path: "/index",
-    name: "HomePage",
-    component: () => import("@/pages/home/HomePage.vue"), // 注意这里文件引入要带上文件后缀.vue
+    path: "/index", // 入口主页面
+    name: "IndexPage",
+    component: () => import("@/pages/index/IndexPage.vue"),
   },
   {
-    path: "/login",
+    path: "/home",
+    name: "HomePage",
+    component: () => import("@/pages/home/HomePage.vue"),
+  },
+  {
+    path: "/login", // 登录页面
     name: "LoginPage",
     component: () => import("@/pages/login/LoginPage.vue"),
+  },
+  {
+    path: "/401",
+    name: "401",
+    component: () => import("@/pages/error/401.vue"),
+  },
+  {
+    path: "/500",
+    name: "500",
+    component: () => import("@/pages/error/500.vue"),
+  },
+  {
+    path: "/:pathMatch(.*)*", // 404页面
+    name: "404",
+    component: () => import("@/pages/error/404.vue"),
   },
 ]
 

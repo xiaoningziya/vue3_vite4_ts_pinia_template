@@ -3,10 +3,8 @@ import { defineComponent } from "vue"
 import { NMessageProvider, useMessage } from "naive-ui"
 
 export default defineComponent({
-  name: "LoginPage",
-  components: {
-    NMessageProvider,
-  },
+  // eslint-disable-next-line vue/multi-word-component-names
+  name: "Error500",
   // setup() {
   //   window.$message = useMessage()
   // },
@@ -14,7 +12,8 @@ export default defineComponent({
 </script>
 
 <template>
-  <n-message-provider>
-    <router-view></router-view>
-  </n-message-provider>
+  <div>
+    <h1>500</h1>
+    <h2>服务崩溃了</h2>
+  </div>
 </template>
