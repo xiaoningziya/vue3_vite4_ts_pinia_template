@@ -1,18 +1,22 @@
 //http.ts
 import axios, { AxiosRequestConfig } from "axios"
 import NProgress from "nprogress"
-
+import { useRouter } from "vue-router"
+import router from "../router/index"
 // 设置请求头和请求路径
 axios.defaults.baseURL = "http://0.0.0.0:3001/api"
 axios.defaults.timeout = 10000
 axios.defaults.headers.post["Content-Type"] = "application/json;charset=UTF-8"
+// const token = localStorage.getItem("NestJS_Token")
+// axios.defaults.headers.common.Authorization = token ? `Bearer ${token}` : ""
 axios.interceptors.request.use(
   (config): AxiosRequestConfig<any> => {
-    const token = window.sessionStorage.getItem("token")
+    // console.log('config', config)
+    const token = localStorage.getItem("NestJS_Token")
     // console.log("请求拦截--config", config)
     if (token) {
       //@ts-ignore
-      config.headers.token = token
+      config.headers.Authorization = `Bearer ${token}`
     }
     return config
   },
@@ -24,12 +28,11 @@ axios.interceptors.request.use(
 // 响应拦截
 axios.interceptors.response.use(
   (res) => {
+    // console.log("响应拦截--response", res)
     // if (res.data.code === 111) {
     //   sessionStorage.setItem("token", "")
     //   // token过期操作
     // }
-    // eslint-disable-next-line no-console
-    // console.log("响应拦截--response", res)
     if (res?.data?.code === -1 && res?.data?.message) {
       // console.log("弹窗", res.data.message)
       window.$message.warning(res?.data?.message || "请求失败，请稍后重试")
@@ -38,7 +41,18 @@ axios.interceptors.response.use(
   },
   (error) => {
     // console.log("响应拦截--error", error)
-    return Promise.reject(error)
+    if (error.response.status === 401) {
+      window.$message.warning("登录失效,请重新登录")
+      setTimeout(() => {
+        router.push("/login")
+      }, 1000)
+    } else {
+      // eslint-disable-next-line no-lonely-if
+      if (error.response.data.code === -1 && error.response.data.message) {
+        window.$message.warning(error.response.data.message)
+      }
+    }
+    return Promise.resolve(error.response.data)
   }
 )
 

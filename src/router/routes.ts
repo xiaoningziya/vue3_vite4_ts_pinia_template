@@ -9,6 +9,24 @@ const routes: RouteRecordRaw[] = [
     path: "/index", // 入口主页面
     name: "IndexPage",
     component: () => import("@/pages/index/IndexPage.vue"),
+    redirect: "/index/UserRegister",
+    children: [
+      {
+        path: "UserRegister",
+        name: "UserRegister",
+        component: () => import("@/views/dbTable/UserRegister.vue"),
+      },
+      {
+        path: "RedisLogin",
+        name: "RedisLogin",
+        component: () => import("@/views/dbTable/RedisLogin.vue"),
+      },
+      {
+        path: "UserToken",
+        name: "UserToken",
+        component: () => import("@/views/dbTable/UserToken.vue"),
+      },
+    ],
   },
   {
     path: "/home",

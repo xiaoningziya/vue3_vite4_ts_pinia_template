@@ -84,7 +84,7 @@ export default defineComponent({
             window.localStorage.setItem("NestJS_Token", res.data.token)
             window?.$message.success("登录成功")
             setTimeout(() => {
-              router.push("/home")
+              router.push("/index")
             }, 300)
           }
           loginLoading.value = false
