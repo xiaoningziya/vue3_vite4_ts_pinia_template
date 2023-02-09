@@ -4,7 +4,7 @@ import { NMessageProvider, useMessage } from "naive-ui"
 
 export default defineComponent({
   // eslint-disable-next-line vue/multi-word-component-names
-  name: "Error500",
+  name: "Error418",
   // setup() {
   //   window.$message = useMessage()
   // },
@@ -13,13 +13,9 @@ export default defineComponent({
 
 <template>
   <div class="xy-center">
-    <n-result
-      status="500"
-      title="500 服务器错误"
-      description="服务器出错可能说明该雇更多程序员了"
-    >
+    <n-result status="418" title="418 我是个杯具" description="一切尽在不言中">
       <template #footer>
-        <n-button>散财消灾</n-button>
+        <n-button>接受真相就是这么简单</n-button>
       </template>
     </n-result>
   </div>

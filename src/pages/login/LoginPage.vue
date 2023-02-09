@@ -1,6 +1,6 @@
 <script lang="ts">
-import { defineComponent, ref } from "vue"
-import { APIAuthLogin } from "@/api/login/login"
+import { defineComponent, ref, onMounted } from "vue"
+import { APIAuthLogin, APIAuthAuthcode } from "@/api/login/login"
 import {
   useMessage,
   FormInst,
@@ -20,6 +20,7 @@ import { useRouter } from "vue-router"
 interface ModelType {
   account: string | null
   password: string | null
+  capcode: string | null
 }
 
 export default defineComponent({
@@ -41,6 +42,7 @@ export default defineComponent({
     const modelRef = ref<ModelType>({
       account: null,
       password: null,
+      capcode: null,
     })
     function validatePasswordStartWith(
       rule: FormItemRule,
@@ -70,15 +72,27 @@ export default defineComponent({
           trigger: ["input", "blur"],
         },
       ],
+      capcode: [
+        {
+          required: true,
+          message: "请输入验证码",
+          trigger: ["input", "blur"],
+        },
+      ],
     }
     window.$message = useMessage()
     const router = useRouter()
+    const capCodeImg = ref<any>("")
+    onMounted(() => {
+      method.getCapCode()
+    })
     const method = {
       login(): void {
         loginLoading.value = true
         APIAuthLogin({
           account: modelRef.value.account as string,
           password: modelRef.value.password as string,
+          VerificationCode: modelRef.value.capcode as string,
         }).then((res) => {
           if (res.code === 0 && res.data.token) {
             window.localStorage.setItem("NestJS_Token", res.data.token)
@@ -90,10 +104,17 @@ export default defineComponent({
           loginLoading.value = false
         })
       },
+      getCapCode() {
+        APIAuthAuthcode({}).then((res) => {
+          capCodeImg.value = res
+          console.log("res", res)
+        })
+      },
     }
     return {
       ...method,
       formRef,
+      capCodeImg,
       rPasswordFormItemRef,
       model: modelRef,
       loginLoading,
@@ -127,11 +148,34 @@ export default defineComponent({
             @keydown.enter.prevent
           />
         </n-form-item>
+        <n-form-item path="capcode" label="图片验证码">
+          <n-input
+            v-model:value="model.capcode"
+            type="text"
+            @keydown.enter.prevent
+          />
+        </n-form-item>
         <n-row :gutter="[0, 24]">
-          <n-col :span="24">
+          <n-col :span="12">
+            <n-popover trigger="hover">
+              <template #trigger>
+                <div
+                  class="codesrap"
+                  @click="getCapCode"
+                  v-html="capCodeImg"
+                ></div>
+              </template>
+              <span>点击重新获取图片验证码</span>
+            </n-popover>
+          </n-col>
+          <n-col :span="12">
             <div class="cardfooter">
               <n-button
-                :disabled="model.account === null || model.password === null"
+                :disabled="
+                  model.account === null ||
+                  model.password === null ||
+                  model.capcode === null
+                "
                 type="info"
                 :loading="loginLoading"
                 @click="handleValidateButtonClick"
@@ -158,6 +202,14 @@ export default defineComponent({
 .login_wrap {
   width: 100%;
   height: 100%;
+  .codesrap {
+    width: 100px;
+    height: 34px;
+    // img {
+    //   width: 100%;
+    //   height: 100%;
+    // }
+  }
   .n-card {
     max-width: 400px;
     margin-left: 65vw;

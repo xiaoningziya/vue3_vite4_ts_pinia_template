@@ -3,16 +3,11 @@ import router from "./router/index"
 import "./style.css"
 import App from "./App.vue"
 import { createPinia } from "pinia"
-import {
-  create,
-  NButton,
-  NDialogProvider,
-  NTag,
-  NDataTable,
-  NPagination,
-} from "naive-ui"
+import { create } from "naive-ui"
+import { ComList } from "@/plugin/naive-ui"
+
 const naive = create({
-  components: [NButton, NDialogProvider, NTag, NDataTable, NPagination],
+  components: ComList,
 })
 const app = createApp(App)
 app.use(router)

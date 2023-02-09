@@ -39,9 +39,14 @@ const routes: RouteRecordRaw[] = [
     component: () => import("@/pages/login/LoginPage.vue"),
   },
   {
-    path: "/401",
-    name: "401",
-    component: () => import("@/pages/error/401.vue"),
+    path: "/403",
+    name: "403",
+    component: () => import("@/pages/error/403.vue"),
+  },
+  {
+    path: "/418",
+    name: "418",
+    component: () => import("@/pages/error/418.vue"),
   },
   {
     path: "/500",
@@ -49,9 +54,13 @@ const routes: RouteRecordRaw[] = [
     component: () => import("@/pages/error/500.vue"),
   },
   {
-    path: "/:pathMatch(.*)*", // 404页面
+    path: "/404",
     name: "404",
     component: () => import("@/pages/error/404.vue"),
+  },
+  {
+    path: "/:pathMatch(.*)*", // 404页面
+    redirect: "/404",
   },
 ]
 
