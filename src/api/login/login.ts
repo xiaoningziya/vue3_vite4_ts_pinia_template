@@ -22,5 +22,12 @@ export const APILoginOut = (params: {}): Promise<HTTP.ResType<any>> => {
 
 // 获取图片验证码
 export const APIAuthAuthcode = (params: {}): Promise<HTTP.ResType<any>> => {
-  return http.get("/auth/authcode", params)
+  return http.post("/auth/authcode", params)
+}
+
+// 验证图片验证码
+export const APIAuthComparecode = (
+  params: T.IAuthComparecodeParams
+): Promise<HTTP.ResType<any>> => {
+  return http.post("/auth/comparecode", params)
 }

@@ -1,6 +1,10 @@
 <script lang="ts">
 import { defineComponent, ref, onMounted } from "vue"
-import { APIAuthLogin, APIAuthAuthcode } from "@/api/login/login"
+import {
+  APIAuthLogin,
+  APIAuthAuthcode,
+  APIAuthComparecode,
+} from "@/api/login/login"
 import {
   useMessage,
   FormInst,
@@ -82,32 +86,50 @@ export default defineComponent({
     }
     window.$message = useMessage()
     const router = useRouter()
-    const capCodeImg = ref<any>("")
+    const capCodeImg = ref<string>("")
+    const capCodeKey = ref<string>("")
     onMounted(() => {
       method.getCapCode()
     })
     const method = {
+      testCode() {
+        loginLoading.value = true
+        APIAuthComparecode({
+          VerificationKey: capCodeKey.value,
+          VerificationCode: modelRef.value.capcode as string,
+        }).then((res) => {
+          loginLoading.value = false
+          if (res.code === 0) {
+            method.login()
+          } else {
+            method.getCapCode()
+          }
+        })
+      },
       login(): void {
         loginLoading.value = true
         APIAuthLogin({
           account: modelRef.value.account as string,
           password: modelRef.value.password as string,
-          VerificationCode: modelRef.value.capcode as string,
         }).then((res) => {
+          loginLoading.value = false
           if (res.code === 0 && res.data.token) {
             window.localStorage.setItem("NestJS_Token", res.data.token)
             window?.$message.success("登录成功")
             setTimeout(() => {
               router.push("/index")
             }, 300)
+          } else {
+            method.getCapCode()
           }
-          loginLoading.value = false
         })
       },
       getCapCode() {
         APIAuthAuthcode({}).then((res) => {
-          capCodeImg.value = res
-          console.log("res", res)
+          if (res.code === 0) {
+            capCodeImg.value = res.data.svg
+            capCodeKey.value = res.data.key
+          }
         })
       },
     }
@@ -123,7 +145,7 @@ export default defineComponent({
         e.preventDefault()
         formRef.value?.validate((errors) => {
           if (!errors) {
-            method.login()
+            method.testCode()
           } else {
             // console.log(errors)
           }
