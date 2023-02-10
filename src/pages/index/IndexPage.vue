@@ -1,6 +1,6 @@
 <script lang="ts">
-import { h, ref, defineComponent } from "vue"
-import { RouterView } from "vue-router"
+import { h, ref, defineComponent, onMounted } from "vue"
+import { RouterView, useRoute, useRouter } from "vue-router"
 import {
   darkTheme,
   NConfigProvider,
@@ -20,7 +20,6 @@ import {
   ServerOutline,
   KeyOutline,
 } from "@vicons/ionicons5"
-import router from "@/router"
 import { APILoginOut } from "@/api/login/login"
 import HeaderNav from "@/components/HeaderNav/HeaderNav.vue"
 import ChangePassword from "@/components/ChangePassword/ChangePassword.vue"
@@ -38,6 +37,11 @@ export default defineComponent({
     NCard,
   },
   setup() {
+    const route = useRoute()
+    const router = useRouter()
+    onMounted(() => {
+      console.log("路由信息", route)
+    })
     window.$message = useMessage()
     const menuOptions: MenuOption[] = [
       {
@@ -52,13 +56,13 @@ export default defineComponent({
             children: [
               {
                 label: "注册表",
-                key: "user",
+                key: "UserRegister",
                 path: "/index/UserRegister",
                 setIcon: PersonAddOutline,
               },
               {
                 label: "登录表",
-                key: "user_token",
+                key: "UserToken",
                 path: "/index/UserToken",
                 setIcon: DocumentTextOutline,
               },
@@ -71,13 +75,13 @@ export default defineComponent({
             children: [
               {
                 label: "登录表",
-                key: "redis_token",
+                key: "RedisLogin",
                 path: "/index/RedisLogin",
                 setIcon: ServerOutline,
               },
               {
                 label: "验证码",
-                key: "redis_code",
+                key: "RedisCode",
                 path: "/index/RedisCode",
                 setIcon: KeyOutline,
               },
@@ -86,7 +90,8 @@ export default defineComponent({
         ],
       },
     ]
-    const DefaultKey = ref<string>("user")
+    const name: string = route.name as string
+    const DefaultKey = ref<string>(name || "UserRegister")
     const onUpdateMenu = (key: string, item: MenuOption): void => {
       // console.log(111, key, item)
     }
