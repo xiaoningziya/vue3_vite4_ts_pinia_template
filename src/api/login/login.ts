@@ -15,6 +15,13 @@ export const APIAuthLogin = (
   return http.post("/auth/login", params)
 }
 
+// 用户注册
+export const APIUserRegister = (
+  params: T.IUserRegisterParams
+): Promise<HTTP.ResType<any>> => {
+  return http.post("/user/register", params)
+}
+
 // 用户登出
 export const APILoginOut = (params: {}): Promise<HTTP.ResType<any>> => {
   return http.post("/user/loginOut", params)

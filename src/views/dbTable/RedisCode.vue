@@ -19,7 +19,7 @@ type TableRow = {
 }
 
 export default defineComponent({
-  name: "RedisLogin",
+  name: "RedisCode",
   components: {},
   setup() {
     const createColumns = ({
@@ -61,41 +61,6 @@ export default defineComponent({
           key: "VALUE",
           minWidth: "80",
         },
-        {
-          title: "uuid",
-          key: "uuid",
-          minWidth: "380",
-        },
-        {
-          title: "账号",
-          key: "account",
-          minWidth: "200",
-        },
-        {
-          title: "token",
-          key: "token",
-          minWidth: "400",
-        },
-        // {
-        //   title: "操作",
-        //   key: "actions",
-        //   fixed: "right",
-        //   render(row) {
-        //     return [
-        //       h(
-        //         NButton,
-        //         {
-        //           type: "warning",
-        //           size: "small",
-        //           onClick: () => {
-        //             offlineUser(row)
-        //           },
-        //         },
-        //         { default: () => "强制下线" }
-        //       ),
-        //     ]
-        //   },
-        // },
       ]
     }
     const tableData = reactive({
@@ -109,22 +74,20 @@ export default defineComponent({
     })
     const loading = ref<boolean>(false)
     const Methods = {
-      offlineAllUser() {
+      clearCapcode() {
         // loading.value = true
         const params = {}
-        API.APIOfflineAllUser(params).then((res) => {
+        API.APIClearCapcodeList(params).then((res) => {
           if (res.code === 0) {
-            message.warning("登录失效，请重新登录")
-            setTimeout(() => {
-              router.push("/login")
-            }, 800)
+            message.success("已清空图片验证码")
+            Methods.getTable()
           }
         })
       },
       getTable() {
         loading.value = true
         const params = {}
-        API.APIGetCatchLoginUser(params).then((res) => {
+        API.APIGetCapcodeList(params).then((res) => {
           if (res.code === 0) {
             const { list, count } = res.data
             tableData.count = count
@@ -152,11 +115,11 @@ export default defineComponent({
       handleConfirmOffline() {
         dialog.warning({
           title: "提示",
-          content: `确定要下线所有登录的用户吗？`,
+          content: `确定要清空所有图片验证码吗？`,
           positiveText: "确定",
           negativeText: "取消",
           onPositiveClick: () => {
-            Methods.offlineAllUser()
+            Methods.clearCapcode()
           },
           onNegativeClick: () => {
             // message.error("不确定")
@@ -195,10 +158,10 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class="RedisLogin_wrap">
+  <div class="RedisCode_wrap">
     <div class="actionHeader">
       <n-button size="small" type="warning" @click="handleConfirmOffline">
-        下线所有用户
+        清空图片验证码
       </n-button>
     </div>
     <n-data-table
@@ -207,7 +170,6 @@ export default defineComponent({
       :data="tableData.list"
       :pagination="false"
       :bordered="true"
-      :scroll-x="1800"
     >
       <template #empty> <div>Redis暂不实现分页查询</div> </template>
     </n-data-table>
@@ -222,7 +184,7 @@ export default defineComponent({
 </template>
 
 <style lang="scss" scoped>
-.RedisLogin_wrap {
+.RedisCode_wrap {
   .actionHeader {
     margin-bottom: 10px;
     display: flex;

@@ -37,6 +37,11 @@ export const APIGetCatchLoginUser = (params: {}): Promise<
   return http.post("/user/getCatchLoginUser", params)
 }
 
+// 获取登录数据 redis
+export const APIGetCapcodeList = (params: {}): Promise<HTTP.ResType<any>> => {
+  return http.post("/user/getCapcodeList", params)
+}
+
 // 下线单个用户
 export const APIOfflineUser = (
   params: T.IOfflineUserParams
@@ -44,7 +49,12 @@ export const APIOfflineUser = (
   return http.post("/user/offlineUser", params)
 }
 
-// 下线单个用户
+// 下线所有用户
 export const APIOfflineAllUser = (params: {}): Promise<HTTP.ResType<any>> => {
   return http.post("/user/offlineAllUser", params)
+}
+
+// 清空图片验证码
+export const APIClearCapcodeList = (params: {}): Promise<HTTP.ResType<any>> => {
+  return http.post("/user/clearCapcodeList", params)
 }

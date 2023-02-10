@@ -26,6 +26,11 @@ const routes: RouteRecordRaw[] = [
         name: "UserToken",
         component: () => import("@/views/dbTable/UserToken.vue"),
       },
+      {
+        path: "RedisCode",
+        name: "RedisCode",
+        component: () => import("@/views/dbTable/RedisCode.vue"),
+      },
     ],
   },
   {

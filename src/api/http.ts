@@ -46,6 +46,9 @@ axios.interceptors.response.use(
       setTimeout(() => {
         router.push("/login")
       }, 1000)
+    } else if (error.response.status === 500) {
+      // window.$message.warning("服务端错误，请稍后重试")
+      router.push("/500")
     } else {
       // eslint-disable-next-line no-lonely-if
       if (error.response.data.code === -1 && error.response.data.message) {

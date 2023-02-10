@@ -17,7 +17,8 @@ import {
   CaretDownOutline,
   PersonAddOutline,
   DocumentTextOutline,
-  CubeOutline,
+  ServerOutline,
+  KeyOutline,
 } from "@vicons/ionicons5"
 import router from "@/router"
 import { APILoginOut } from "@/api/login/login"
@@ -66,9 +67,15 @@ export default defineComponent({
             children: [
               {
                 label: "登录表",
-                key: "redis_0",
+                key: "redis_token",
                 path: "/index/RedisLogin",
-                setIcon: CubeOutline,
+                setIcon: ServerOutline,
+              },
+              {
+                label: "验证码",
+                key: "redis_code",
+                path: "/index/RedisCode",
+                setIcon: KeyOutline,
               },
             ],
           },
@@ -85,6 +92,10 @@ export default defineComponent({
         label: "退出登录",
         value: "LoginOut",
       },
+      {
+        label: "修改密码",
+        value: "UpdatePassword",
+      },
     ]
     const Methods = {
       userLoginOut() {
@@ -97,9 +108,21 @@ export default defineComponent({
           }
         })
       },
+      userUpdatePassword() {
+        APILoginOut({}).then((res) => {
+          window.$message.info("userUpdatePassword")
+        })
+      },
       PopUserUpdate(value: any) {
-        if (value === "LoginOut") {
-          Methods.userLoginOut()
+        switch (value) {
+          case "LoginOut":
+            Methods.userLoginOut()
+            break
+          case "UpdatePassword":
+            Methods.userUpdatePassword()
+            break
+          default:
+            Methods.userLoginOut()
         }
       },
     }

@@ -1,8 +1,9 @@
 <script lang="ts">
-import { defineComponent, ref, onMounted } from "vue"
+import { defineComponent, ref, onMounted, watch } from "vue"
 import {
   APIAuthLogin,
   APIAuthAuthcode,
+  APIUserRegister,
   APIAuthComparecode,
 } from "@/api/login/login"
 import {
@@ -22,9 +23,9 @@ import {
 import { useRouter } from "vue-router"
 
 interface ModelType {
-  account: string | null
-  password: string | null
-  capcode: string | null
+  account: string
+  password: string
+  capcode: string
 }
 
 export default defineComponent({
@@ -41,12 +42,12 @@ export default defineComponent({
   setup() {
     const formRef = ref<FormInst | null>(null)
     const rPasswordFormItemRef = ref<FormItemInst | null>(null)
-    const loginLoading = ref<boolean>(false)
+    const submitLoading = ref<boolean>(false)
     const message = useMessage()
     const modelRef = ref<ModelType>({
-      account: null,
-      password: null,
-      capcode: null,
+      account: "",
+      password: "",
+      capcode: "",
     })
     function validatePasswordStartWith(
       rule: FormItemRule,
@@ -88,31 +89,61 @@ export default defineComponent({
     const router = useRouter()
     const capCodeImg = ref<string>("")
     const capCodeKey = ref<string>("")
+    const PageType = ref<number>(1)
     onMounted(() => {
-      method.getCapCode()
+      Methods.getCapCode()
     })
-    const method = {
+    watch(PageType, () => {
+      Methods.getCapCode()
+      Methods.resetForm()
+    })
+    const Methods = {
+      resetForm() {
+        modelRef.value.account = ""
+        modelRef.value.password = ""
+        modelRef.value.capcode = ""
+      },
+      changeType(val: number) {
+        PageType.value = val
+      },
       testCode() {
-        loginLoading.value = true
+        submitLoading.value = true
         APIAuthComparecode({
           VerificationKey: capCodeKey.value,
           VerificationCode: modelRef.value.capcode as string,
         }).then((res) => {
-          loginLoading.value = false
+          submitLoading.value = false
           if (res.code === 0) {
-            method.login()
+            PageType.value === 1 ? Methods.login() : Methods.register()
           } else {
-            method.getCapCode()
+            Methods.getCapCode()
+          }
+        })
+      },
+      register() {
+        submitLoading.value = true
+        APIUserRegister({
+          account: modelRef.value.account as string,
+          password: modelRef.value.password as string,
+        }).then((res) => {
+          submitLoading.value = false
+          if (res.code === 0) {
+            window?.$message.success("账号注册完成，请登录")
+            setTimeout(() => {
+              PageType.value = 1
+            }, 300)
+          } else {
+            Methods.getCapCode()
           }
         })
       },
       login(): void {
-        loginLoading.value = true
+        submitLoading.value = true
         APIAuthLogin({
           account: modelRef.value.account as string,
           password: modelRef.value.password as string,
         }).then((res) => {
-          loginLoading.value = false
+          submitLoading.value = false
           if (res.code === 0 && res.data.token) {
             window.localStorage.setItem("NestJS_Token", res.data.token)
             window?.$message.success("登录成功")
@@ -120,7 +151,7 @@ export default defineComponent({
               router.push("/index")
             }, 300)
           } else {
-            method.getCapCode()
+            Methods.getCapCode()
           }
         })
       },
@@ -134,18 +165,19 @@ export default defineComponent({
       },
     }
     return {
-      ...method,
+      ...Methods,
+      PageType,
       formRef,
       capCodeImg,
       rPasswordFormItemRef,
       model: modelRef,
-      loginLoading,
+      submitLoading,
       rules,
       handleValidateButtonClick(e: MouseEvent) {
         e.preventDefault()
         formRef.value?.validate((errors) => {
           if (!errors) {
-            method.testCode()
+            Methods.testCode()
           } else {
             // console.log(errors)
           }
@@ -158,7 +190,7 @@ export default defineComponent({
 
 <template>
   <div class="login_wrap">
-    <n-card title="LoginCard" hoverable>
+    <n-card :title="PageType === 1 ? 'Login' : 'Register'" hoverable>
       <n-form ref="formRef" :model="model" :rules="rules">
         <n-form-item path="account" label="账号">
           <n-input v-model:value="model.account" @keydown.enter.prevent />
@@ -178,7 +210,7 @@ export default defineComponent({
           />
         </n-form-item>
         <n-row :gutter="[0, 24]">
-          <n-col :span="12">
+          <n-col :span="8">
             <n-popover trigger="hover">
               <template #trigger>
                 <div
@@ -190,28 +222,33 @@ export default defineComponent({
               <span>点击重新获取图片验证码</span>
             </n-popover>
           </n-col>
-          <n-col :span="12">
+          <n-col :span="8">
+            <n-button
+              v-if="PageType === 1"
+              quaternary
+              type="info"
+              @click="changeType(2)"
+            >
+              还没账号 去注册
+            </n-button>
+            <n-button v-else quaternary type="info" @click="changeType(1)">
+              已有账号 去登录
+            </n-button>
+          </n-col>
+          <n-col :span="8">
             <div class="cardfooter">
               <n-button
                 :disabled="
-                  model.account === null ||
-                  model.password === null ||
-                  model.capcode === null
+                  model.account !== '' ||
+                  model.password !== '' ||
+                  model.capcode !== ''
                 "
                 type="info"
-                :loading="loginLoading"
+                :loading="submitLoading"
                 @click="handleValidateButtonClick"
               >
-                登录/注册
+                {{ PageType === 1 ? "登录" : "注册" }}
               </n-button>
-              <!-- <n-button
-                :disabled="model.account === null || model.password === null"
-                type="info"
-                :loading="loginLoading"
-                @click="handleValidateButtonClick"
-              >
-                注册
-              </n-button> -->
             </div>
           </n-col>
         </n-row>
