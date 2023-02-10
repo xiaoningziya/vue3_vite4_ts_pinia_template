@@ -1,5 +1,6 @@
 <script lang="ts">
 import { defineComponent, ref, onMounted, watch } from "vue"
+import NestToken from "@/common/token"
 import {
   APIAuthLogin,
   APIAuthAuthcode,
@@ -145,7 +146,7 @@ export default defineComponent({
         }).then((res) => {
           submitLoading.value = false
           if (res.code === 0 && res.data.token) {
-            window.localStorage.setItem("NestJS_Token", res.data.token)
+            NestToken.setToken(res.data.token)
             window?.$message.success("登录成功")
             setTimeout(() => {
               router.push("/index")
@@ -239,9 +240,9 @@ export default defineComponent({
             <div class="cardfooter">
               <n-button
                 :disabled="
-                  model.account !== '' ||
-                  model.password !== '' ||
-                  model.capcode !== ''
+                  model.account === '' ||
+                  model.password === '' ||
+                  model.capcode === ''
                 "
                 type="info"
                 :loading="submitLoading"

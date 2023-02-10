@@ -3,6 +3,7 @@ import axios, { AxiosRequestConfig } from "axios"
 import NProgress from "nprogress"
 import { useRouter } from "vue-router"
 import router from "../router/index"
+import NestToken from "@/common/token"
 // 设置请求头和请求路径
 axios.defaults.baseURL = "http://0.0.0.0:3001/api"
 axios.defaults.timeout = 10000
@@ -12,7 +13,7 @@ axios.defaults.headers.post["Content-Type"] = "application/json;charset=UTF-8"
 axios.interceptors.request.use(
   (config): AxiosRequestConfig<any> => {
     // console.log('config', config)
-    const token = localStorage.getItem("NestJS_Token")
+    const token = NestToken.getToken()
     // console.log("请求拦截--config", config)
     if (token) {
       //@ts-ignore

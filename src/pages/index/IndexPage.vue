@@ -22,10 +22,14 @@ import {
 } from "@vicons/ionicons5"
 import router from "@/router"
 import { APILoginOut } from "@/api/login/login"
+import HeaderNav from "@/components/HeaderNav/HeaderNav.vue"
+import ChangePassword from "@/components/ChangePassword/ChangePassword.vue"
 
 export default defineComponent({
   name: "IndexPage",
   components: {
+    HeaderNav,
+    ChangePassword,
     NLayout,
     NLayoutSider,
     NMenu,
@@ -83,58 +87,12 @@ export default defineComponent({
       },
     ]
     const DefaultKey = ref<string>("user")
-    const UserValue = ref("")
-    const UserOptions: Array<{
-      label: string
-      value: string
-    }> = [
-      {
-        label: "退出登录",
-        value: "LoginOut",
-      },
-      {
-        label: "修改密码",
-        value: "UpdatePassword",
-      },
-    ]
-    const Methods = {
-      userLoginOut() {
-        APILoginOut({}).then((res) => {
-          if (res.code === 0) {
-            window.$message.info("用户退出，前往登录页面~")
-            setTimeout(() => {
-              router.push("/login")
-            }, 800)
-          }
-        })
-      },
-      userUpdatePassword() {
-        APILoginOut({}).then((res) => {
-          window.$message.info("userUpdatePassword")
-        })
-      },
-      PopUserUpdate(value: any) {
-        switch (value) {
-          case "LoginOut":
-            Methods.userLoginOut()
-            break
-          case "UpdatePassword":
-            Methods.userUpdatePassword()
-            break
-          default:
-            Methods.userLoginOut()
-        }
-      },
-    }
     const onUpdateMenu = (key: string, item: MenuOption): void => {
       // console.log(111, key, item)
     }
 
     return {
-      ...Methods,
       DefaultKey,
-      UserValue,
-      UserOptions,
       onUpdateMenu,
       theme: ref<GlobalTheme | null>(null),
       darkTheme,
@@ -174,25 +132,8 @@ export default defineComponent({
 <template>
   <div class="index_wrap">
     <n-space vertical>
-      <n-card class="HeaderNav">
-        <template #cover>
-          <div class="ContentNav">
-            <n-popselect
-              v-model:value="UserValue"
-              :options="UserOptions"
-              :on-update:value="PopUserUpdate"
-              trigger="click"
-            >
-              <n-avatar
-                bordered
-                size="medium"
-                src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
-                fallback-src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
-              />
-            </n-popselect>
-          </div>
-        </template>
-      </n-card>
+      <HeaderNav></HeaderNav>
+      <ChangePassword></ChangePassword>
       <!-- <n-switch v-model:value="collapsed" /> -->
       <n-layout has-sider>
         <n-layout-sider
@@ -239,22 +180,6 @@ h1 {
 
 .n-space {
   height: 100%;
-}
-.HeaderNav {
-  width: 100%;
-  height: 60px;
-  overflow: hidden;
-  .ContentNav {
-    height: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: end;
-    padding: 0 24px;
-    .n-avatar {
-      cursor: pointer;
-      border-color: lightseagreen;
-    }
-  }
 }
 .n-layout,
 .main_content {

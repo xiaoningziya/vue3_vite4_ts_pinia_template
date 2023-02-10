@@ -8,6 +8,8 @@ import {
   NPopselect,
   NAvatar,
   NPopover,
+  NCard,
+  NModal,
 } from "naive-ui"
 
 export const ComList = [
@@ -20,4 +22,6 @@ export const ComList = [
   NPopselect,
   NAvatar,
   NPopover,
+  NCard,
+  NModal,
 ]
