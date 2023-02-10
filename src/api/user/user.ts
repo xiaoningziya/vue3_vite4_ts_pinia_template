@@ -58,3 +58,10 @@ export const APIOfflineAllUser = (params: {}): Promise<HTTP.ResType<any>> => {
 export const APIClearCapcodeList = (params: {}): Promise<HTTP.ResType<any>> => {
   return http.post("/user/clearCapcodeList", params)
 }
+
+// 修改密码
+export const APIUserUpdatePassword = (
+  params: T.IUserUpdatePasswordParams
+): Promise<HTTP.ResType<any>> => {
+  return http.post("/user/updatePassword", params)
+}

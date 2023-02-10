@@ -19,3 +19,8 @@ export interface IGetLoginUserParams {
 export interface IOfflineUserParams {
   id: string
 }
+
+export interface IUserUpdatePasswordParams {
+  old_password: string
+  new_password: string
+}

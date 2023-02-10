@@ -10,6 +10,12 @@ import {
   NPopover,
   NCard,
   NModal,
+  NForm,
+  NFormItem,
+  NInput,
+  NCol,
+  NRow,
+  NSpace,
 } from "naive-ui"
 
 export const ComList = [
@@ -24,4 +30,10 @@ export const ComList = [
   NPopover,
   NCard,
   NModal,
+  NForm,
+  NFormItem,
+  NInput,
+  NCol,
+  NRow,
+  NSpace,
 ]
