@@ -65,3 +65,10 @@ export const APIUserUpdatePassword = (
 ): Promise<HTTP.ResType<any>> => {
   return http.post("/user/updatePassword", params)
 }
+
+// 修改昵称
+export const APIUserUpdateNickname = (
+  params: T.IUserUpdateNicknameParams
+): Promise<HTTP.ResType<any>> => {
+  return http.post("/user/updateNickname", params)
+}

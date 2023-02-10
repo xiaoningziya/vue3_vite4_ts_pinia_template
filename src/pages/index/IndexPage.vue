@@ -23,12 +23,14 @@ import {
 import { APILoginOut } from "@/api/login/login"
 import HeaderNav from "@/components/HeaderNav/HeaderNav.vue"
 import ChangePassword from "@/components/ChangePassword/ChangePassword.vue"
+import SetNickname from "@/components/SetNickname/SetNickname.vue"
 
 export default defineComponent({
   name: "IndexPage",
   components: {
     HeaderNav,
     ChangePassword,
+    SetNickname,
     NLayout,
     NLayoutSider,
     NMenu,
@@ -138,7 +140,6 @@ export default defineComponent({
   <div class="index_wrap">
     <n-space vertical>
       <HeaderNav></HeaderNav>
-      <ChangePassword></ChangePassword>
       <!-- <n-switch v-model:value="collapsed" /> -->
       <n-layout has-sider>
         <n-layout-sider
@@ -171,6 +172,8 @@ export default defineComponent({
           </n-card>
         </n-layout>
       </n-layout>
+      <ChangePassword></ChangePassword>
+      <SetNickname></SetNickname>
     </n-space>
   </div>
 </template>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue"
+import { ref, onBeforeUnmount } from "vue"
 import { useEventBus } from "@vueuse/core"
 import { FormInst, FormItemInst, FormItemRule, FormRules } from "naive-ui"
 import { APIUserUpdatePassword } from "@/api/user/user"
@@ -7,9 +7,15 @@ import { useRouter } from "vue-router"
 
 const router = useRouter()
 const showModal = ref<boolean>(false)
-const BUS = useEventBus<string>("ChangePassword")
-BUS.on((event, data) => {
-  showModal.value = true
+const BUS = useEventBus<string>("EventBus")
+const Listener = (event: string, data: any) => {
+  if (event === "UpdatePassword") {
+    showModal.value = true
+  }
+}
+BUS.on(Listener)
+onBeforeUnmount(() => {
+  BUS.off(Listener)
 })
 const formRef = ref<FormInst | null>(null)
 const rules: FormRules = {
@@ -125,8 +131,8 @@ const updatePassword = () => {
           />
         </n-form-item>
         <n-form-item
-          first
           ref="AgainPasswordFormItemRef"
+          first
           path="new_password_again"
           label="再次输入新密码"
         >

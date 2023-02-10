@@ -5,7 +5,7 @@ import { useRouter } from "vue-router"
 import { useEventBus } from "@vueuse/core"
 import NestToken from "@/common/token"
 
-const BUS = useEventBus<string>("ChangePassword")
+const BUS = useEventBus<string>("EventBus")
 const router = useRouter()
 const UserOptions: Array<{
   label: string
@@ -16,8 +16,16 @@ const UserOptions: Array<{
     value: "LoginOut",
   },
   {
-    label: "修改密码",
+    label: "更新密码",
     value: "UpdatePassword",
+  },
+  {
+    label: "设置昵称",
+    value: "SetNickname",
+  },
+  {
+    label: "设置头像",
+    value: "SetAvatar",
   },
 ]
 const UserValue = ref("")
@@ -33,7 +41,10 @@ const userLoginOut = () => {
   })
 }
 const userUpdatePassword = () => {
-  BUS.emit()
+  BUS.emit("UpdatePassword")
+}
+const userSetNickname = () => {
+  BUS.emit("SetNickname")
 }
 const PopUserUpdate = (value: any) => {
   console.log("点击用户菜单", value)
@@ -43,6 +54,10 @@ const PopUserUpdate = (value: any) => {
   }
   if (value === "UpdatePassword") {
     userUpdatePassword()
+    return
+  }
+  if (value === "SetNickname") {
+    userSetNickname()
   }
 }
 </script>

@@ -24,3 +24,7 @@ export interface IUserUpdatePasswordParams {
   old_password: string
   new_password: string
 }
+
+export interface IUserUpdateNicknameParams {
+  nickname: string
+}
