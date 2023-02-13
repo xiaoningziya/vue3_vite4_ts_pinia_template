@@ -3,17 +3,20 @@ import axios, { AxiosRequestConfig } from "axios"
 import NProgress from "nprogress"
 import { useRouter } from "vue-router"
 import router from "../router/index"
-import NestToken from "@/common/token"
+// import NestToken from "@/common/token"
+import store from "@/store/index"
+import { useMainStore } from "@/store/main"
+
+const MainStore = useMainStore(store)
 // 设置请求头和请求路径
 axios.defaults.baseURL = "http://0.0.0.0:3001/api"
 axios.defaults.timeout = 10000
 axios.defaults.headers.post["Content-Type"] = "application/json;charset=UTF-8"
-// const token = localStorage.getItem("NestJS_Token")
-// axios.defaults.headers.common.Authorization = token ? `Bearer ${token}` : ""
 axios.interceptors.request.use(
   (config): AxiosRequestConfig<any> => {
     // console.log('config', config)
-    const token = NestToken.getToken()
+    // const token = NestToken.getToken()
+    const token = MainStore.token
     // console.log("请求拦截--config", config)
     if (token) {
       //@ts-ignore
@@ -44,6 +47,8 @@ axios.interceptors.response.use(
     // console.log("响应拦截--error", error)
     if (error.response.status === 401) {
       window.$message.warning("登录失效,请重新登录")
+      // NestToken.clearToken()
+      MainStore.clearUserMessage()
       setTimeout(() => {
         router.push("/login")
       }, 1000)

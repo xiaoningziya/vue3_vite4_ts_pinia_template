@@ -1,6 +1,7 @@
 <script lang="ts">
 import { defineComponent, ref, onMounted, watch } from "vue"
-import NestToken from "@/common/token"
+// import NestToken from "@/common/token"
+import { useMainStore } from "@/store/main"
 import {
   APIAuthLogin,
   APIAuthAuthcode,
@@ -41,6 +42,7 @@ export default defineComponent({
     NCard,
   },
   setup() {
+    const MainStore = useMainStore()
     const formRef = ref<FormInst | null>(null)
     const rPasswordFormItemRef = ref<FormItemInst | null>(null)
     const submitLoading = ref<boolean>(false)
@@ -117,6 +119,7 @@ export default defineComponent({
           if (res.code === 0) {
             PageType.value === 1 ? Methods.login() : Methods.register()
           } else {
+            modelRef.value.capcode = ""
             Methods.getCapCode()
           }
         })
@@ -146,7 +149,9 @@ export default defineComponent({
         }).then((res) => {
           submitLoading.value = false
           if (res.code === 0 && res.data.token) {
-            NestToken.setToken(res.data.token)
+            // NestToken.setToken(res.data.token)
+            MainStore.setToken(res.data.token)
+            MainStore.setUserInfo(res.data.userInfo)
             window?.$message.success("登录成功")
             setTimeout(() => {
               router.push("/index")

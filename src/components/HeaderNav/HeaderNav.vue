@@ -3,8 +3,10 @@ import { APILoginOut } from "@/api/login/login"
 import { ref } from "vue"
 import { useRouter } from "vue-router"
 import { useEventBus } from "@vueuse/core"
-import NestToken from "@/common/token"
+// import NestToken from "@/common/token"
+import { useMainStore } from "@/store/main"
 
+const MainStore = useMainStore()
 const BUS = useEventBus<string>("EventBus")
 const router = useRouter()
 const UserOptions: Array<{
@@ -32,7 +34,8 @@ const UserValue = ref("")
 const userLoginOut = () => {
   APILoginOut({}).then((res) => {
     if (res.code === 0) {
-      NestToken.clearToken()
+      // NestToken.clearToken()
+      MainStore.clearUserMessage()
       window.$message.info("用户退出，前往登录页面~")
       setTimeout(() => {
         router.push("/login")
