@@ -1,16 +1,28 @@
 <script setup lang="ts">
-import { ref, onBeforeUnmount } from "vue"
+import { ref, onBeforeUnmount, nextTick } from "vue"
 import { useEventBus } from "@vueuse/core"
-import { FormInst, FormItemInst, FormItemRule, FormRules } from "naive-ui"
+import {
+  FormInst,
+  FormItemInst,
+  FormItemRule,
+  FormRules,
+  InputInst,
+} from "naive-ui"
 import { APIUserUpdateNickname } from "@/api/user/user"
 import { useRouter } from "vue-router"
+import { useMainStore } from "@/store/main"
 
+const MainStore = useMainStore()
 const router = useRouter()
 const showModal = ref<boolean>(false)
 const BUS = useEventBus<string>("EventBus")
 const Listener = (event: string, data: any) => {
   if (event === "SetNickname") {
+    model.value.nickname = MainStore.userInfo.nickname || ""
     showModal.value = true
+    nextTick(() => {
+      nicknameRef.value?.focus()
+    })
   }
 }
 BUS.on(Listener)
@@ -18,6 +30,7 @@ onBeforeUnmount(() => {
   BUS.off(Listener)
 })
 const formRef = ref<FormInst | null>(null)
+const nicknameRef = ref<InputInst | null>(null)
 const rules: FormRules = {
   nickname: [
     {
@@ -52,6 +65,9 @@ const updateNickname = () => {
   APIUserUpdateNickname(params).then((res) => {
     submitLoading.value = false
     if (res.code === 0) {
+      MainStore.setUserInfo(
+        Object.assign({}, MainStore.userInfo, res.data.userInfo)
+      )
       window.$message.success("昵称更新完成")
       showModal.value = false
     }
@@ -70,7 +86,11 @@ const updateNickname = () => {
     >
       <n-form ref="formRef" :model="model" :rules="rules">
         <n-form-item path="nickname" label="用户昵称">
-          <n-input v-model:value="model.nickname" @keydown.enter.prevent />
+          <n-input
+            ref="nicknameRef"
+            v-model:value="model.nickname"
+            @keydown.enter.prevent
+          />
         </n-form-item>
         <n-space justify="end">
           <n-button type="default" @click="() => (showModal = false)">

@@ -28,3 +28,7 @@ export interface IUserUpdatePasswordParams {
 export interface IUserUpdateNicknameParams {
   nickname: string
 }
+
+export interface IUserUpdateAvatarParams {
+  url: string
+}

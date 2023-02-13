@@ -24,6 +24,7 @@ import { APILoginOut } from "@/api/login/login"
 import HeaderNav from "@/components/HeaderNav/HeaderNav.vue"
 import ChangePassword from "@/components/ChangePassword/ChangePassword.vue"
 import SetNickname from "@/components/SetNickname/SetNickname.vue"
+import SetAvatar from "@/components/SetAvatar/SetAvatar.vue"
 
 export default defineComponent({
   name: "IndexPage",
@@ -31,6 +32,7 @@ export default defineComponent({
     HeaderNav,
     ChangePassword,
     SetNickname,
+    SetAvatar,
     NLayout,
     NLayoutSider,
     NMenu,
@@ -47,7 +49,7 @@ export default defineComponent({
     window.$message = useMessage()
     const menuOptions: MenuOption[] = [
       {
-        label: "NestJS 提供服务",
+        label: "NodeJS 提供服务",
         key: "NestJS",
         setIcon: BookmarkOutline,
         children: [
@@ -174,6 +176,7 @@ export default defineComponent({
       </n-layout>
       <ChangePassword></ChangePassword>
       <SetNickname></SetNickname>
+      <SetAvatar></SetAvatar>
     </n-space>
   </div>
 </template>

@@ -72,3 +72,10 @@ export const APIUserUpdateNickname = (
 ): Promise<HTTP.ResType<any>> => {
   return http.post("/user/updateNickname", params)
 }
+
+// 修改头像
+export const APIUserUpdateAvatar = (
+  params: T.IUserUpdateAvatarParams
+): Promise<HTTP.ResType<any>> => {
+  return http.post("/user/updateAvatar", params)
+}

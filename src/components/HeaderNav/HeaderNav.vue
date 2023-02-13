@@ -49,6 +49,9 @@ const userUpdatePassword = () => {
 const userSetNickname = () => {
   BUS.emit("SetNickname")
 }
+const userSetAvatar = () => {
+  BUS.emit("SetAvatar")
+}
 const PopUserUpdate = (value: any) => {
   console.log("点击用户菜单", value)
   if (value === "LoginOut") {
@@ -61,6 +64,10 @@ const PopUserUpdate = (value: any) => {
   }
   if (value === "SetNickname") {
     userSetNickname()
+    return
+  }
+  if (value === "SetAvatar") {
+    userSetAvatar()
   }
 }
 </script>
@@ -68,6 +75,17 @@ const PopUserUpdate = (value: any) => {
   <n-card class="HeaderNav">
     <template #cover>
       <div class="ContentNav">
+        <n-gradient-text
+          class="nicknameWrap"
+          type="info"
+          :size="18"
+          :gradient="{
+            from: 'rgb(85, 85, 85)',
+            to: 'rgb(170, 170, 170)',
+          }"
+        >
+          {{ MainStore.userInfo.nickname }}
+        </n-gradient-text>
         <n-popselect
           v-model:value="UserValue"
           :options="UserOptions"
@@ -77,7 +95,7 @@ const PopUserUpdate = (value: any) => {
           <n-avatar
             bordered
             size="medium"
-            src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
+            :src="MainStore.userInfo.avatar"
             fallback-src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
           />
         </n-popselect>
@@ -96,6 +114,9 @@ const PopUserUpdate = (value: any) => {
     align-items: center;
     justify-content: end;
     padding: 0 24px;
+    .nicknameWrap {
+      margin-right: 10px;
+    }
     .n-avatar {
       cursor: pointer;
       border-color: lightseagreen;

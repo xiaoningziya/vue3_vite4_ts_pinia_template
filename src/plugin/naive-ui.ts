@@ -16,6 +16,8 @@ import {
   NCol,
   NRow,
   NSpace,
+  NGradientText,
+  NUpload,
 } from "naive-ui"
 
 export const ComList = [
@@ -36,4 +38,6 @@ export const ComList = [
   NCol,
   NRow,
   NSpace,
+  NGradientText,
+  NUpload,
 ]

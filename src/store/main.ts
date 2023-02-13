@@ -1,11 +1,15 @@
 import { defineStore } from "pinia"
 
 export const useMainStore = defineStore({
-  id: "mian",
+  id: "main",
   state: () => ({
     name: "超级管理员",
     token: "",
-    userInfo: {},
+    userInfo: {
+      account: "",
+      avatar: "",
+      nickname: "",
+    },
   }),
   getters: {
     nameLength: (state) => state.name.length,
@@ -19,12 +23,16 @@ export const useMainStore = defineStore({
     async setToken(payload: string) {
       this.token = payload
     },
-    async setUserInfo(payload: object) {
+    async setUserInfo(payload: any) {
       this.userInfo = payload
     },
     async clearUserMessage() {
       this.token = ""
-      this.userInfo = {}
+      this.userInfo = {
+        account: "",
+        avatar: "",
+        nickname: "",
+      }
     },
   },
   persist: {

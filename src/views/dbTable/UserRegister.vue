@@ -8,6 +8,7 @@ import {
   NPagination,
   NTag,
   useDialog,
+  NAvatar,
 } from "naive-ui"
 import type { DataTableColumns } from "naive-ui"
 import * as API from "@/api/user/user"
@@ -74,6 +75,24 @@ export default defineComponent({
         {
           title: "头像",
           key: "avatar",
+          render(row) {
+            if (!row.avatar) {
+              return []
+            }
+            return [
+              h(
+                NAvatar,
+                {
+                  bordered: true,
+                  size: "small",
+                  src: row.avatar,
+                  fallbackSrc:
+                    "https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg",
+                },
+                {}
+              ),
+            ]
+          },
         },
         {
           title: "注册时间",
