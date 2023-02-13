@@ -80,7 +80,7 @@ const updateAvatar = () => {
         class="avatarUpload"
         :max="1"
         method="POST"
-        action="http://0.0.0.0:3001/api/upload/avatar"
+        action="http://172.16.1.165:3001/api/upload/avatar"
         list-type="image-card"
         :on-preview="handlePreview"
         :on-remove="handleRemove"
