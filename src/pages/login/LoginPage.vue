@@ -2,6 +2,7 @@
 import { defineComponent, ref, onMounted, watch } from "vue"
 // import NestToken from "@/common/token"
 import { useMainStore } from "@/store/main"
+import { onKeyStroke } from "@vueuse/core"
 import {
   APIAuthLogin,
   APIAuthAuthcode,
@@ -42,6 +43,29 @@ export default defineComponent({
     NCard,
   },
   setup() {
+    const handleValidateButtonClick = () => {
+      // e.preventDefault()
+      formRef.value?.validate((errors) => {
+        if (!errors) {
+          Methods.testCode()
+        } else {
+          // console.log(errors)
+        }
+      })
+    }
+    onKeyStroke(
+      "Enter",
+      (event) => {
+        console.log("event", event)
+        const { account, password, capcode } = modelRef.value
+        if (account && password && capcode) {
+          handleValidateButtonClick()
+        } else {
+          window.$message.warning("请填写完整表单")
+        }
+      },
+      { eventName: "keyup" }
+    )
     const MainStore = useMainStore()
     const formRef = ref<FormInst | null>(null)
     const rPasswordFormItemRef = ref<FormItemInst | null>(null)
@@ -172,6 +196,7 @@ export default defineComponent({
     }
     return {
       ...Methods,
+      handleValidateButtonClick,
       PageType,
       formRef,
       capCodeImg,
@@ -179,16 +204,6 @@ export default defineComponent({
       model: modelRef,
       submitLoading,
       rules,
-      handleValidateButtonClick(e: MouseEvent) {
-        e.preventDefault()
-        formRef.value?.validate((errors) => {
-          if (!errors) {
-            Methods.testCode()
-          } else {
-            // console.log(errors)
-          }
-        })
-      },
     }
   },
 })

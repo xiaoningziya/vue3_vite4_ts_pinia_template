@@ -49,6 +49,10 @@ const beforeUpload = (data: {
   return true
 }
 const uploadUrl = ref<string>("")
+// 上传接口不在鉴权白名单，所以需要带上用户信息
+const setHeader = {
+  Authorization: `Bearer ${MainStore.token}`,
+}
 const updateAvatar = () => {
   submitLoading.value = true
   const params = {
@@ -81,6 +85,7 @@ const updateAvatar = () => {
         :max="1"
         method="POST"
         action="http://172.16.1.165:3001/api/upload/avatar"
+        :headers="setHeader"
         list-type="image-card"
         :on-preview="handlePreview"
         :on-remove="handleRemove"
