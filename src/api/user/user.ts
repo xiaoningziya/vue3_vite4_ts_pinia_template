@@ -79,3 +79,10 @@ export const APIUserUpdateAvatar = (
 ): Promise<HTTP.ResType<any>> => {
   return http.post("/user/updateAvatar", params)
 }
+
+// 用户表--导出当前页数据
+export const APIUserExportExcel = (
+  params: T.IGetUserListParams
+): Promise<HTTP.ResType<any>> => {
+  return http.post("/user/exportExcel", params)
+}

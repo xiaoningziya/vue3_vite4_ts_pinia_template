@@ -62,11 +62,6 @@ export default defineComponent({
           minWidth: "80",
         },
         {
-          title: "uuid",
-          key: "uuid",
-          minWidth: "380",
-        },
-        {
           title: "账号",
           key: "account",
           minWidth: "200",
@@ -75,6 +70,11 @@ export default defineComponent({
           title: "token",
           key: "token",
           minWidth: "400",
+        },
+        {
+          title: "uuid",
+          key: "uuid",
+          minWidth: "380",
         },
         // {
         //   title: "操作",

@@ -57,19 +57,9 @@ export default defineComponent({
           minWidth: "80",
         },
         {
-          title: "uuid",
-          key: "uuid",
-          minWidth: "380",
-        },
-        {
           title: "账号",
           key: "account",
           minWidth: "200",
-        },
-        {
-          title: "token",
-          key: "token",
-          minWidth: "400",
         },
         {
           title: "昵称",
@@ -85,6 +75,16 @@ export default defineComponent({
           title: "更新时间",
           key: "update_time",
           minWidth: "400",
+        },
+        {
+          title: "token",
+          key: "token",
+          minWidth: "400",
+        },
+        {
+          title: "uuid",
+          key: "uuid",
+          minWidth: "380",
         },
         {
           title: "操作",

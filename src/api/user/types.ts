@@ -1,6 +1,7 @@
 export interface IGetUserListParams {
   pagesize: number
   pagenum: number
+  keyword: string
 }
 
 export interface IDeleteUserParams {

@@ -1,6 +1,5 @@
 <script lang="ts">
 import { h, ref, defineComponent, reactive, onMounted, watch } from "vue"
-
 import {
   NButton,
   useMessage,
@@ -12,6 +11,7 @@ import {
 } from "naive-ui"
 import type { DataTableColumns } from "naive-ui"
 import * as API from "@/api/user/user"
+import { APIUserExportExcel } from "@/api/user/user"
 type TableRow = {
   no: number
   id: string
@@ -61,18 +61,6 @@ export default defineComponent({
           },
         },
         {
-          title: "uuid",
-          key: "id",
-        },
-        {
-          title: "账号",
-          key: "account",
-        },
-        {
-          title: "昵称",
-          key: "nickname",
-        },
-        {
           title: "头像",
           key: "avatar",
           render(row) {
@@ -95,12 +83,24 @@ export default defineComponent({
           },
         },
         {
+          title: "昵称",
+          key: "nickname",
+        },
+        {
+          title: "账号",
+          key: "account",
+        },
+        {
           title: "注册时间",
           key: "create_time",
         },
         {
           title: "更新时间",
           key: "update_time",
+        },
+        {
+          title: "uuid",
+          key: "id",
         },
         {
           title: "操作",
@@ -110,6 +110,7 @@ export default defineComponent({
               h(
                 NButton,
                 {
+                  tertiary: true,
                   type: row.delete_time ? "info" : "warning",
                   // strong: true,
                   // tertiary: true,
@@ -143,6 +144,7 @@ export default defineComponent({
       count: 0,
       list: [],
     })
+    const searchVal = ref<string>("")
     const pagination = reactive({
       page: 1,
       pageSize: 10,
@@ -153,6 +155,7 @@ export default defineComponent({
       getTable() {
         loading.value = true
         const params = {
+          keyword: searchVal.value || "",
           pagesize: pagination.pageSize,
           pagenum: pagination.page,
         }
@@ -165,6 +168,43 @@ export default defineComponent({
           }
           loading.value = false
         })
+      },
+      LikeSearch() {
+        // if (!searchVal.value.length || searchVal.value.length < 2) {
+        //   window.$message.warning("最少输入两位检索")
+        //   return
+        // }
+        pagination.page = 1
+        Methods.getTable()
+      },
+      exportExcel() {
+        APIUserExportExcel({
+          keyword: searchVal.value || "",
+          pagesize: pagination.pageSize,
+          pagenum: pagination.page,
+        }).then((res) => {
+          if (res.code === 0) {
+            const { content, filename } = res.data
+            Methods.saveFile(content.data, filename)
+          }
+        })
+      },
+      saveFile(file: any, filename: string) {
+        const fileBinary = Buffer.from(file, "binary")
+        const blob = new Blob([fileBinary], {
+          type: "application/vnd.ms-excel",
+        })
+        if (window.navigator.msSaveOrOpenBlob) {
+          navigator.msSaveBlob(blob, filename)
+        } else {
+          const href = URL.createObjectURL(blob) // 创建新的URL表示指定的blob对象
+          const a = document.createElement("a") // 创建a标签
+          a.style.display = "none"
+          a.href = href // 指定下载链接
+          a.download = `${filename}.xlsx` // 指定下载文件名
+          a.click() // 触发下载
+          URL.revokeObjectURL(a.href) // 释放URL对象
+        }
       },
       deleteUser() {
         const params = {
@@ -236,6 +276,7 @@ export default defineComponent({
     const dialog = useDialog()
     return {
       ...Methods,
+      searchVal,
       loading,
       tableData,
       columns: createColumns({
@@ -258,6 +299,21 @@ export default defineComponent({
 
 <template>
   <div class="UserRegister_wrap">
+    <n-space justify="space-between" align="center">
+      <n-input-group class="likeSearch">
+        <n-button type="primary" :disabled="true"> 模糊检索账号 </n-button>
+        <n-input
+          v-model:value="searchVal"
+          clearable
+          :maxlength="11"
+          placeholder="请输入..."
+        />
+        <n-button type="primary" ghost @click="LikeSearch"> 查询 </n-button>
+      </n-input-group>
+      <n-button type="info" size="small" dashed @click="exportExcel">
+        导出当前页数据
+      </n-button>
+    </n-space>
     <n-data-table
       :loading="loading"
       :columns="columns"
@@ -281,6 +337,12 @@ export default defineComponent({
     margin-top: 12px;
     display: flex;
     justify-content: flex-end;
+  }
+  .likeSearch {
+    width: 400px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
   }
 }
 </style>
